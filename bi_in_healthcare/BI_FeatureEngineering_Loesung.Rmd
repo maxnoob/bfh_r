@@ -8,10 +8,15 @@ knit: (function(inputFile, encoding) {
       rmarkdown::render(inputFile,
                         encoding=encoding,
                         output_dir=file.path(out_dir))})
-output:
-  pdf_document:
-    toc: true
-    highlight: tango
+output: 
+  html_document:
+    toc: yes
+    toc_float:
+      toc_collapsed: yes
+      collapsed: FALSE
+      smooth_scroll: TRUE
+    number_sections: yes
+    df_print: kable
 ---
 
 ```{r setup, include=FALSE}
@@ -20,137 +25,101 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 # Studierendenfragen
 
-1)  
+**Frage 1)**
 
-    1)  Welche der Encoding Strategien und Contrast Methoden müssen wir kennen und anwenden können? ZB von Helmert haben wir ja noch nie vorher gehört? Die MC Fragen waren unmöglich, weil wir die Theorie dahinter nicht kennen? <https://www.r-bloggers.com/2020/02/a-guide-to-encoding-categorical-features-using-r/>
+**1a) Welche der Encoding Strategien und Contrast Methoden müssen wir kennen und anwenden können? ZB von Helmert haben wir ja noch nie vorher gehört? Die MC Fragen waren unmöglich, weil wir die Theorie dahinter nicht kennen? <https://www.r-bloggers.com/2020/02/a-guide-to-encoding-categorical-features-using-r/>**
 
-        \> Die "Theorie" ist: wie codiert man kategorielle Variablen so, dass man gewünschte Vergleiche durch die Parameterschätzungen erhält.
+Die "Theorie" ist: wie codiert man kategorielle Variablen so, dass man gewünschte Vergleiche durch die Parameterschätzungen erhält.
 
-        > Es sollte das Prinzip von Kontrasten verstanden sein. Einzelne Kontraste sind weniger wichtig. Zum Helmert-Kontrast:
-        >
-        > Der Helmert-Kontrast vergleicht Mittelwerte.
-        >
-        > 1. Level: Mittelwert aller Variablen
-        >
-        > 2. Level: Vergleich Level 1 mit Mittelwert von Variable 1 bis n
-        >
-        > 3. Level: Vergleich Level 2 mit Mittelwert von Variable 2 bis n
-        >
-        > bis Level n.
-        >
-        > Die untersuchte Frage beim Helmert ist:
-        >
-        > Wie verändert sich der Mittelwert, wenn ein zusätzlicher Faktor berücksichtigt wird.
-        >
-        > ```{r}
-        > contr.helmert(5)
-        > ```
+Es sollte das Prinzip von Kontrasten verstanden sein. Einzelne Kontraste sind weniger wichtig. Zum Helmert-Kontrast:
 
-    2)  Ich habe die Contrast Methoden noch nicht ganz verstanden, können wir ein Beispiel mit dem Bike Datensatz machen?
+Der Helmert-Kontrast vergleicht Mittelwerte. 1. Level: Mittelwert aller Variablen 2. Level: Vergleich Level 1 mit Mittelwert von Variable 1 bis n 3. Level: Vergleich Level 2 mit Mittelwert von Variable 2 bis n bis Level n. Die untersuchte Frage beim Helmert ist: Wie verändert sich der Mittelwert, wenn ein zusätzlicher Faktor berücksichtigt wird.
 
-        > siehe Lösung Hausaufgabe 2
+```         
+contr.helmert(5)
+```
 
-    3)  Wie weiss man, welche Kodierung bei contrast verwendet werden soll?
+**1b) Ich habe die Contrast Methoden noch nicht ganz verstanden, können wir ein Beispiel mit dem Bike Datensatz machen?**
 
-        > Eine Kontrast-Methode benötigt keine zusätzliche Kodierung.
+siehe Lösung Hausaufgabe 2
 
-2)  Ist Dummy Encoding das was wir mit der R Funktion "factor" / "as.factor(x)" machen?
+**1c) Wie weiss man, welche Kodierung bei contrast verwendet werden soll?**
 
-> Nein. «as.factor» ändert nur den «Typ» eines Vektors, damit dieser als Faktor behandelt wird. Die Werte im Vektor bleiben gleich und es werden keine Kontraste gesetzt.
+Eine Kontrast-Methode benötigt keine zusätzliche Kodierung.
 
-3)  "aber bei Regularisierung spielt die Skalierung dann wieder eine Rolle (Warum?)" (p.24)
+**Frage 2) Ist Dummy Encoding das was wir mit der R Funktion "factor" / "as.factor(x)" machen?**
 
-> Skalierung wird gemacht, damit die Skalenniveaus angeglichen werden und Varianzen überhaupt betrachtet werden können (eine Variable von 0 bis 100 und eine andere von 0 bis 1; kann sonst nicht verglichen werden).
->
-> Dies spielt beim Strafterm, welcher Teil vom Embedded-Verfahren ist ein Rolle.
->
-> Bei der Regression ist die Skalierung nicht relevant, da das Regeressionsmodell die Niveauunterschiede ausgleichen kann, weil die Schätzer dann angepasst werden.
+Nein. «as.factor» ändert nur den «Typ» eines Vektors, damit dieser als Faktor behandelt wird. Die Werte im Vektor bleiben gleich und es werden keine Kontraste gesetzt.
 
-4)  Bias-Variance-Tradeoff? (p.28)
+**Frage 3) "aber bei Regularisierung spielt die Skalierung dann wieder eine Rolle (Warum?)" (p.24)**
 
-> Man möchte mitteln wo die Zielgrösse ist, was aber nicht immer ganz möglich ist, weshalb ein wenig Varianz zugelassen wird.
+Skalierung wird gemacht, damit die Skalenniveaus angeglichen werden und Varianzen überhaupt betrachtet werden können (eine Variable von 0 bis 100 und eine andere von 0 bis 1; kann sonst nicht verglichen werden). Dies spielt beim Strafterm, welcher Teil vom Embedded-Verfahren ist ein Rolle. Bei der Regression ist die Skalierung nicht relevant, da das Regeressionsmodell die Niveauunterschiede ausgleichen kann, weil die Schätzer dann angepasst werden.
 
-5)  One-Hot-Coding:  Was bedeutet " \~.-1 " im Code sparse.model.matrix(\~.-1, df1)?
+**Frage 4) Bias-Variance-Tradeoff? (p.28)**
 
-> Durch «-1», wird der Intercept nicht berechnet.
+Man möchte mitteln wo die Zielgrösse ist, was aber nicht immer ganz möglich ist, weshalb ein wenig Varianz zugelassen wird.
 
-6)  Folie 24: trg\$Species \<- relevel(trg\$Species, ref = "setosa") \--\> Sind die anderen Spezies dann die Kontraste?
+**Frage 5) One-Hot-Coding:  Was bedeutet " \~.-1 " im Code sparse.model.matrix(\~.-1, df1)?**
 
-> Hier sind Kontraste nicht vorhanden.
->
-> Anforderungen an Kontraste:
->
-> -   sind Faktoren;
->
-> -   und erklärende Variablen.
+Durch «-1», wird der Intercept nicht berechnet.
 
-7)  Principal Component Analysis \--\> Was müssen wir davon können und verstehen? Sehr kompliziert zum interpretieren. Verstehe es nicht
+**Frage 6) Folie 24: trg\$Species \<- relevel(trg\$Species, ref = "setosa") \--\> Sind die anderen Spezies dann die Kontraste?**
 
-> Principal Component Analysis (PCA) zur Maximierung der Erklärung der Varianz.
->
-> In ersten beiden (bis drei) Primary Components (PC) sollte möglichst viel stecken, dass gesagt werden kann, dass viel in den Daten steckt. Kann mit den ersten PC viel von der Varianz erklärt werden, dann kann Feature Engineering, Machine Learning etc. gemacht werden. Sonst macht es keinen Sinn.
->
-> Daumenregel: PC1 & PC2 sollten mind 70-80% der Varianz erklären (kumulative Proportionen von PC2 ablesen).
->
-> Es gibt immer so viele PC, wie Spalten im Datensatz.
+Hier sind Kontraste nicht vorhanden. Anforderungen an Kontraste: - sind Faktoren; - und erklärende Variablen.
 
-8)  Was kann man nun mit den "predicted" Daten von *data.frame(predict(pc), iris[5])* machen?
+**Frage 7) Principal Component Analysis \--\> Was müssen wir davon können und verstehen? Sehr kompliziert zum interpretieren. Verstehe es nicht**
 
-> Das ist die Erklärung, wieso die Punkte im biplot so verteilt sind, wie sie es sind.
+Principal Component Analysis (PCA) zur Maximierung der Erklärung der Varianz.
 
-9)  alle Aufgaben von den Multiplechoice-Fragen zu FE durchgehen
+In ersten beiden (bis drei) Primary Components (PC) sollte möglichst viel stecken, dass gesagt werden kann, dass viel in den Daten steckt. Kann mit den ersten PC viel von der Varianz erklärt werden, dann kann Feature Engineering, Machine Learning etc. gemacht werden. Sonst macht es keinen Sinn. Daumenregel: PC1 & PC2 sollten mind 70-80% der Varianz erklären (kumulative Proportionen von PC2 ablesen). Es gibt immer so viele PC, wie Spalten im Datensatz.
 
-> Haben wir gemacht. Einige Punkte der Besprechung:
->
-> -   Overfitting: ein Modell versucht, zu viel aus den Daten zu erklären, was sonst nur "Rauschen" wäre; Overfitting kann nicht durch durch Datenbereiningung vermieden werden, sondern auch durch zu wenige Daten entstehen. Gleichezitig passt sich ein zu komplexes Modell an Daten an
->
-> -   Signifikanz spielt keine Rolle für PCA; PC1 und PC2 erklären die meiste Varianz, die mit einem Optimierungsverfahren zur Erklärung der maximalen Varianz berechnet wurden.
+**Frage 8) Was kann man nun mit den "predicted" Daten von data.frame(predict(pc), iris[5]) machen?**
 
-10. Aufgabe 1: Wenden Sie One-Hot-Encoding auf die Variable season im bike-Datensatz an. (Info: Dummy konnte im R nicht installiert werden.)
+Das ist die Erklärung, wieso die Punkte im biplot so verteilt sind, wie sie es sind.
 
-> Das Dummy-Paket gibt es nicht mehr für R. Es kann das Paket fastDummies verwendet werden.
->
-> `df_fast_dummies <- df_bike`
->
-> `df_fast_dummies <- dummy_cols(df_fast_dummies, c("season"), remove_selected_columns = TRUE)`
->
-> `str(df_fast_dummies)`
+**Frage 9) alle Aufgaben von den Multiplechoice-Fragen zu FE durchgehen**
 
-11) Können wir den Output von R zusammen interpretieren? "summary(mymodel)" auf der seite p. 24
+Haben wir gemacht. Einige Punkte der Besprechung: - Overfitting: ein Modell versucht, zu viel aus den Daten zu erklären, was sonst nur "Rauschen" wäre; Overfitting kann nicht durch durch Datenbereiningung vermieden werden, sondern auch durch zu wenige Daten entstehen. Gleichezitig passt sich ein zu komplexes Modell an Daten an - Signifikanz spielt keine Rolle für PCA; PC1 und PC2 erklären die meiste Varianz, die mit einem Optimierungsverfahren zur Erklärung der maximalen Varianz berechnet wurden.
 
-> ```{r}
-> pc <- prcomp(iris[,-5], center = TRUE, scale = TRUE)
-> #plot(pc)
-> #biplot(pc)
-> trg <- data.frame(predict(pc), iris[5])
-> library(nnet)
-> trg$Species <- relevel(trg$Species, ref = "setosa")
-> mymodel <- multinom(Species~PC1+PC2, data = trg)
-> summary(mymodel)
-> ```
+**Frage 10) Aufgabe 1: Wenden Sie One-Hot-Encoding auf die Variable season im bike-Datensatz an. (Info: Dummy konnte im R nicht installiert werden.)**
 
-> Referenz ist Setosa. Deshalb werden die anderen Eigenschaften (Versicolor, Verginica) jeweils mit Setosa verglichen. Die Koeffizienten sind jeweils die log odds. Bsp: Eine Erhöhung von PC1 um eine Einheit erhöht die log odds von Versicolor zu Setosa um das 12.78-fache.
+Das Dummy-Paket gibt es nicht mehr für R. Es kann das Paket fastDummies verwendet werden. `df_fast_dummies <- df_bike` `df_fast_dummies <- dummy_cols(df_fast_dummies, c("season"), remove_selected_columns = TRUE)` `str(df_fast_dummies)`
 
-> ```{r}
-> # Confusion Matrix & Misclassification Error
-> p <- predict(mymodel, trg)
-> tab <- table(p, trg$Species)
-> tab
-> ```
->
-> In der Confusion-Matrix ist im iris-Beispiel sichtbar, dass nur 12 Werte falsch kategorisiert wurden und das Modell demnach recht gut die Daten erklärt.
+**Frage 11) Können wir den Output von R zusammen interpretieren? "summary(mymodel)" auf der seite p. 24**
 
-12. Eigenvectors and eigenvalues verstehe ich nur ansatzweise: Sind quasi Rotationsachsen von Objekten. Werden bei Transformationen nur gestaucht oder gestreckt, weichen aber nicht von eigentlicher Ausrichtung ab. Müssen wir das genauer wissen?
+```{r}
+pc <- prcomp(iris[,-5], center = TRUE, scale = TRUE)
+#plot(pc)
+#biplot(pc)
+trg <- data.frame(predict(pc), iris[5])
+library(nnet)
+trg$Species <- relevel(trg$Species, ref = "setosa")
+mymodel <- multinom(Species~PC1+PC2, data = trg)
+summary(mymodel)
+```
 
-> Wir sind darauf nicht genauer eingegangen.
+Referenz ist Setosa. Deshalb werden die anderen Eigenschaften (Versicolor, Verginica) jeweils mit Setosa verglichen. Die Koeffizienten sind jeweils die log odds. Bsp: Eine Erhöhung von PC1 um eine Einheit erhöht die log odds von Versicolor zu Setosa um das 12.78-fache.
 
-13. Wie Kontraste in lm-Funktion einstellbar unklar.
+```{r}
+# Confusion Matrix & Misclassification Error
+p <- predict(mymodel, trg)
+tab <- table(p, trg$Species)
+tab
+```
 
-> Mit Paramater-Kontrast. Standard bei `lm` ist "treatment".
+In der Confusion-Matrix ist im iris-Beispiel sichtbar, dass nur 12 Werte falsch kategorisiert wurden und das Modell demnach recht gut die Daten erklärt.
+
+**Frage 12) Eigenvectors and eigenvalues verstehe ich nur ansatzweise: Sind quasi Rotationsachsen von Objekten. Werden bei Transformationen nur gestaucht oder gestreckt, weichen aber nicht von eigentlicher Ausrichtung ab. Müssen wir das genauer wissen?**
+
+Wir sind darauf nicht genauer eingegangen.
+
+**Frage 13) Wie Kontraste in lm-Funktion einstellbar unklar.**
+
+Mit Paramater-Kontrast. Standard bei `lm` ist "treatment".
 
 # Hausaufgaben
 
-### 1) One-Hot-Coding
+## One-Hot-Coding
 
 a.  Wenden Sie One-Hot-Encoding auf die Variable season im bike-Datensatz an.
 
@@ -160,7 +129,7 @@ b.  Finden Sie heraus, was der Unterschied zur Dummy-Codierung ist.
 
 Beim One-Hot-Coding werden kategorielle Attribute (Faktoren) in so viele neue Spalten aufgeteilt wie es Kategorien (N) gibt. Die Ausprägungen der neuen Spalten sind 0 und 1. Bei der Dummy-Codierung wird eine Spalte weggelassen, denn wenn alle andere Spalten 0 sind, hat diese Dummy-Spalte die Ausprägung 1.
 
-![One-Hot-Coding und Dummy-Coding](one_hot_encoding.png)
+![One-Hot-Coding und Dummy-Coding](assets/one_hot_encoding.png)
 
 In R gibt es mehrere Möglichkeiten für One-Hot-Coding. Man kann die Libraries "Matrix" oder "fastDummies" nutzen oder manuell umcodieren. Die umcodierte Variable (hier Season) muss jedoch zwingend ein Factor sein!
 
@@ -168,7 +137,7 @@ In R gibt es mehrere Möglichkeiten für One-Hot-Coding. Man kann die Libraries 
 library(dplyr)
 library(lubridate)
 library(Matrix)
-df_bike <- read.csv("bike.csv", stringsAsFactors = FALSE)
+df_bike <- read.csv("assets/bike.csv", stringsAsFactors = FALSE)
 df_bike$datetime <- mdy_hm(df_bike$datetime) # ohne Umwandlung, macht Datum sonst Probleme
 df_bike$season <- factor(df_bike$season, levels = 1:4,
                          labels = c("spring","summer","autumn","winter"),
@@ -195,7 +164,9 @@ df_manuell <- df_bike %>%
 
 One-Hot-Encoding muss bei der normalen linearen Regression (LM) nicht zwingend gemacht werden, wenn die Spalte ein Faktor ist. Bei anderen Modellen wird evtl. One-Hot-/Dummy-Encoding benötigt. Das kommt auf das Modell drauf an.
 
-### 2) Finden Sie heraus, was Kontraste sind und wie man diese in der lm-Funktion einstellen kann. Was für ein Kontrast ist bei der Default-Einstellung in lm für Faktoren wirksam?
+## Kontraste
+
+Finden Sie heraus, was Kontraste sind und wie man diese in der lm-Funktion einstellen kann. Was für ein Kontrast ist bei der Default-Einstellung in lm für Faktoren wirksam?
 
 **Lösung:**
 
@@ -255,7 +226,9 @@ contrasts(bike_season_contrasts$season)<-cbind(spring_v_winter,
                                                fall_v_winter)
 ```
 
-### 3) Kommentieren Sie den Code auf der Folie 24 ausführlich, führen Sie diese PCA selbst in R aus und interpretieren Sie summary(mymodel) sowie tab.
+## PCA
+
+Kommentieren Sie den Code auf der Folie 24 ausführlich, führen Sie diese PCA selbst in R aus und interpretieren Sie summary(mymodel) sowie tab.
 
 **Lösung:**
 
@@ -322,21 +295,23 @@ So reduzieren wir, je nach Datensatz, sehr viele Dimensionen, auf wenige Compone
 
 Die PCA wird eingesetzt zur Maximierung der Erklärung der Varianz. Wenn wir herausgefunden haben, welcher Anteil der Varianz maximal mit unseren PC erklärt werden kann, wissen wird, ob mit dem Datensatz weitergearbeitet werden kann oder nicht.
 
-### 4) Was unterscheidet Filter, Wrapping und Embedded-Verfahren?
+## Filter, Wrapping, Embedded
+
+Was unterscheidet Filter, Wrapping und Embedded-Verfahren?
 
 **Lösung:**
-
-### Filter, Wrapping, Embedded-Verfahren
 
 -   Filtering: Man verwendet statistische Verfahren, um die Beziehung zwischen den Merkmalen und der Zielvariable zu analysieren. Dies kann beinhalten, dass man sich anschaut, wie Merkmale miteinander korrelieren, wie stark sie mit der Zielvariable zusammenhängen oder ob es signifikante Unterschiede zwischen den Klassen gibt. Filter-Verfahren bewerten die Merkmale auf Basis dieser statistischen Maße, um die relevanten Merkmale zu identifizieren. Statistische Tests (T-Test, Korrelation) helfen dabei, die erklärenden Variable zu finden. Alle Daten genutzt des Modells werden genutzt.
 -   Wrapping: Wrapper Verfahren verwenden tatsächliche Vorhersagemodelle, um die Qualität der Merkmale zu bewerten. Sie bewerten, wie gut ein Modell mit verschiedenen Merkmalsubsets auf einem Trainingsdatensatz abschneidet. Diese Methode ist modellabhängig, da sie die Leistung des Modells als Maß für die Merkmalsauswahl verwendet. Features werden schrittweise hinzugefügt oder entfernt, um die Leistung zu optimieren. Es wird jeweils nur ein Teil der Daten genutzt.
 -   Embedded-Verfahren: Filtering und Wrapping passieren nicht sequentiell, sondern Bestandteil der Modellkreierung. Embedded-Verfahren integrieren die Merkmalsauswahl in den Modelltrainingsprozess selbst. Das Modell analysiert automatisch die Relevanz der Merkmale während des Trainings und eliminiert unwichtige Features.
 
-![Quelle: <https://www.datasciencesmachinelearning.com/2019/10/feature-selection-filter-method-wrapper.html>](filter_wrapping_emedded.png)
+![Quelle: <https://www.datasciencesmachinelearning.com/2019/10/feature-selection-filter-method-wrapper.html>](assets/filter_wrapping_emedded.png)
 
 # Übungsaufgaben
 
-### 1) Führen Sie eine PCA auf dem mtcars-Datensatz aus & interpretieren Sie das Ergebnis
+## PCA
+
+Führen Sie eine PCA auf dem mtcars-Datensatz aus & interpretieren Sie das Ergebnis
 
 **Lösung:**
 
@@ -355,11 +330,11 @@ biplot(pc)
 
 Die "Sportwagen" sind im Biplot oben in der Mitte dargestellt, amerikanische Limusinen unten rechts und internationale "Kleinwagen" links.
 
-### 2) Wenden Sie Up/Down-Sampling mit dem Caret-Paket auf dem biopsy-Datensatz an und interpretieren Sie die Ergebnisse (Datensatz in Paket Mass: library(Mass)).
+## Up/Down-Sampling
+
+Wenden Sie Up/Down-Sampling mit dem Caret-Paket auf dem biopsy-Datensatz an und interpretieren Sie die Ergebnisse (Datensatz in Paket Mass: library(Mass)).
 
 **Lösung:**
-
-### Up/Down-Sampling
 
 Beim Sampling werden unbalancierte Daten ausbalanciert. Wenn wir genug Daten haben, können wir Under-Sampling machen.
 
